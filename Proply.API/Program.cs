@@ -11,11 +11,16 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi(); // Expose OpenAPI spec in development
 }
-else
-{
+
+var runningInContainer = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
+if (!runningInContainer)
+ {
     // In a production/container environment, HTTPS redirection is often handled by a reverse proxy.
-    app.UseHttpsRedirection();
-}
+    // Only force HTTPS redirection when the app is not inside a container. Containerized deployments typically
+    // rely on an external reverse proxy (e.g., Nginx, Traefik, or an ingress controller) to handle TLS termination
+    // and redirection concerns.
+     app.UseHttpsRedirection();
+ }
 
 var summaries = new[]
 {
