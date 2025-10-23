@@ -9,10 +9,13 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.MapOpenApi(); // Expose OpenAPI spec in development
 }
-
-app.UseHttpsRedirection();
+else
+{
+    // In a production/container environment, HTTPS redirection is often handled by a reverse proxy.
+    app.UseHttpsRedirection();
+}
 
 var summaries = new[]
 {
